@@ -1,0 +1,2 @@
+import './craft-shim.js';
+import init from './pdfcraft-ocr-worker-87760711b21afa24.js';await init();

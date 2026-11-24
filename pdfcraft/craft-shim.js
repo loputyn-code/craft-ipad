@@ -7,24 +7,10 @@
   if (G.__craftShim) return;
   G.__craftShim = true;
   const MAP = {
- "models/text-detection.onnx": {
+ "pdfcraft-web-c0a95e1af84f3780_bg.wasm": {
   "parts": [
-   "text-detection.onnx.b64.0.txt"
-  ],
-  "gz": true,
-  "type": "application/octet-stream"
- },
- "models/text-recognition.onnx": {
-  "parts": [
-   "text-recognition.onnx.b64.0.txt"
-  ],
-  "gz": true,
-  "type": "application/octet-stream"
- },
- "pdfcraft-web-dbf16682ba914f2f_bg.wasm": {
-  "parts": [
-   "pdfcraft-web-dbf16682ba914f2f_bg.wasm.b64.0.txt",
-   "pdfcraft-web-dbf16682ba914f2f_bg.wasm.b64.1.txt"
+   "pdfcraft-web-c0a95e1af84f3780_bg.wasm.b64.0.txt",
+   "pdfcraft-web-c0a95e1af84f3780_bg.wasm.b64.1.txt"
   ],
   "gz": true,
   "type": "application/wasm"
