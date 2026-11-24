@@ -6,16 +6,7 @@
   const G = self;
   if (G.__craftShim) return;
   G.__craftShim = true;
-  const MAP = {
- "app/photocraft-web-caa57f60c12c8283.part-aa": {
-  "parts": [
-   "photocraft-web-caa57f60c12c8283.part-aa.b64.0.txt",
-   "photocraft-web-caa57f60c12c8283.part-aa.b64.1.txt"
-  ],
-  "gz": false,
-  "type": "application/octet-stream"
- }
-};
+  const MAP = {};
   const origFetch = G.fetch.bind(G);
   const cache = new Map();
 
