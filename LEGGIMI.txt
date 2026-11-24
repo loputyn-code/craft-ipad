@@ -1,0 +1,15 @@
+Craft per iPad - hub con le versioni web ufficiali di PhotoCraft 0.23.1, PdfCraft 0.21.1,
+WordCraft 0.18.1 e FilmCraft 0.20.1 (release storytold su GitHub, SHA-256 verificati).
+
+Modifiche rispetto ai pacchetti originali:
+- I file troppo grandi per molti hosting (oltre 19 MB) e i formati non comuni (.onnx, .part-aa)
+  sono compressi, codificati in base64 e divisi in pezzi *.b64.N.txt. Il file craft-shim.js di
+  ciascuna app intercetta fetch() e li ricompone nel browser. Nessun file supera i 18 MB, quindi
+  si possono caricare anche dal sito di GitHub (limite di 25 MB per file).
+- PhotoCraft: copiata la cartella snippets/ anche in app/snippets/ (nella release 0.23.1 manca e
+  l'app non parte).
+- Ogni app ha un pulsante in basso a destra per tornare all'hub.
+
+Come pubblicarlo: carica il contenuto di questa cartella su qualunque hosting di file statici
+(GitHub Pages, Cloudflare Pages, Netlify...). Non servono server né header speciali.
+Prova in locale: python3 -m http.server dentro la cartella, poi http://localhost:8000/

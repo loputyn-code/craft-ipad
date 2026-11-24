@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Craft per iPad</title>
+<link rel="apple-touch-icon" href="icons/hub.png">
+<style>
+  :root {
+    --bg: #f4f4f6; --card: #ffffff; --ink: #1c1c1f; --muted: #6b6b73; --line: #e2e2e7;
+    --accent: #2f6fe0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #151517; --card: #222226; --ink: #f2f2f4; --muted: #9a9aa3; --line: #34343a; --accent: #6f9dff; }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 980px; margin: 0 auto; padding: 32px 24px 48px; }
+  header { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
+  header img { width: 56px; height: 56px; border-radius: 14px; }
+  h1 { margin: 0; font-size: 30px; letter-spacing: -0.02em; }
+  .lead { color: var(--muted); margin: 6px 0 28px; max-width: 60ch; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  a.app { display: flex; flex-direction: column; gap: 12px; padding: 20px; min-height: 190px;
+    background: var(--card); border: 1px solid var(--line); border-radius: 18px; color: inherit;
+    text-decoration: none; -webkit-tap-highlight-color: transparent;
+    transition: transform .12s ease, box-shadow .12s ease; }
+  a.app:active { transform: scale(.98); }
+  @media (hover: hover) { a.app:hover { box-shadow: 0 6px 24px rgba(0,0,0,.08); } }
+  .top { display: flex; align-items: center; gap: 14px; }
+  .top img { width: 64px; height: 64px; }
+  .name { font-size: 20px; font-weight: 650; }
+  .ver { color: var(--muted); font-size: 13px; }
+  .desc { color: var(--muted); flex: 1; }
+  .meta { display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+  .open { background: var(--accent); color: #fff; padding: 8px 18px; border-radius: 999px; font-weight: 600; }
+  .size { color: var(--muted); }
+  section.notes { margin-top: 36px; padding: 20px 22px; background: var(--card); border: 1px solid var(--line);
+    border-radius: 18px; }
+  section.notes h2 { margin: 0 0 8px; font-size: 17px; }
+  section.notes ul { margin: 0; padding-left: 20px; color: var(--muted); }
+  section.notes li { margin: 6px 0; }
+  footer { margin-top: 28px; font-size: 13px; color: var(--muted); }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <img src="icons/hub.png" alt="">
+    <div><h1>Craft per iPad</h1></div>
+  </header>
+  <p class="lead">Le versioni web ufficiali delle app Craft, pronte da usare nel browser. Tocca un'app per aprirla, poi il pulsante ⌂ in basso a destra per tornare qui.</p>
+
+  <div class="grid">
+    <a class="app" href="photocraft/index.html">
+      <div class="top"><img src="icons/photocraft.png" alt=""><div><div class="name">PhotoCraft</div><div class="ver">versione 0.23.1</div></div></div>
+      <div class="desc">Fotoritocco con livelli, maschere, testo e file PSD veri.</div>
+      <div class="meta"><span class="size">≈ 16 MB al primo avvio</span><span class="open">Apri</span></div>
+    </a>
+    <a class="app" href="pdfcraft/index.html">
+      <div class="top"><img src="icons/pdfcraft.png" alt=""><div><div class="name">PdfCraft</div><div class="ver">versione 0.21.1</div></div></div>
+      <div class="desc">Leggi, organizza e proteggi i PDF, con riconoscimento del testo.</div>
+      <div class="meta"><span class="size">≈ 22 MB al primo avvio</span><span class="open">Apri</span></div>
+    </a>
+    <a class="app" href="wordcraft/index.html">
+      <div class="top"><img src="icons/wordcraft.png" alt=""><div><div class="name">WordCraft</div><div class="ver">versione 0.18.1</div></div></div>
+      <div class="desc">Scrittura e impaginazione di documenti.</div>
+      <div class="meta"><span class="size">≈ 22 MB al primo avvio</span><span class="open">Apri</span></div>
+    </a>
+    <a class="app" href="filmcraft/index.html">
+      <div class="top"><img src="icons/filmcraft.png" alt=""><div><div class="name">FilmCraft</div><div class="ver">versione 0.20.1</div></div></div>
+      <div class="desc">Montaggio video, colore e audio.</div>
+      <div class="meta"><span class="size">≈ 15 MB al primo avvio</span><span class="open">Apri</span></div>
+    </a>
+  </div>
+
+  <section class="notes">
+    <h2>Da sapere</h2>
+    <ul>
+      <li>Le app sono pensate per mouse e tastiera: col touch funzionano, ma con una Magic Keyboard o un trackpad vanno molto meglio.</li>
+      <li>Il primo avvio scarica l'app e può richiedere qualche secondo, poi il browser la tiene in cache.</li>
+      <li>Puoi aprire i tuoi file dai menu delle app, ma questa pagina blocca i download: esportare o salvare un file sull'iPad potrebbe non funzionare. Prova prima di usarle per un lavoro importante.</li>
+      <li>Sono build sperimentali: se un'app si blocca, ricarica la pagina.</li>
+    </ul>
+  </section>
+
+  <footer>
+    App di <a href="https://getartcraft.com">ArtCraft</a>, open source (MIT / Apache-2.0); licenze e note nella cartella di ciascuna app.
+    Catalogo dal progetto <a href="https://github.com/storytold/craft-launcher">craft-launcher</a>.
+  </footer>
+</main>
+</body>
+</html>
