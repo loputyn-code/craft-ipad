@@ -1,0 +1,3 @@
+{
+ "solidcraft": {"version": "0.48.1", "reason": "la build web ufficiale si blocca all'avvio (time not implemented on this platform)"}
+}
