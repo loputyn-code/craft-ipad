@@ -1,15 +1,17 @@
-Craft per iPad - hub con le versioni web ufficiali di PhotoCraft 0.23.1, PdfCraft 0.21.1,
-WordCraft 0.18.1 e FilmCraft 0.20.1 (release storytold su GitHub, SHA-256 verificati).
+Craft Launcher per iPad - versione web del launcher ArtCraft (github.com/storytold/craft-launcher).
 
-Modifiche rispetto ai pacchetti originali:
-- I file troppo grandi per molti hosting (oltre 19 MB) e i formati non comuni (.onnx, .part-aa)
-  sono compressi, codificati in base64 e divisi in pezzi *.b64.N.txt. Il file craft-shim.js di
-  ciascuna app intercetta fetch() e li ricompone nel browser. Nessun file supera i 18 MB, quindi
-  si possono caricare anche dal sito di GitHub (limite di 25 MB per file).
-- PhotoCraft: copiata la cartella snippets/ anche in app/snippets/ (nella release 0.23.1 manca e
-  l'app non parte).
-- Ogni app ha un pulsante in basso a destra per tornare all'hub.
+Contiene le build web ufficiali di tutte le app del catalogo che ne hanno una (release su GitHub,
+SHA-256 verificati). Escluse: AniCraft e MailCraft (nessuna build web pubblicata) e SolidCraft
+0.48.1 (la build web ufficiale si blocca all'avvio: "time not implemented on this platform").
 
-Come pubblicarlo: carica il contenuto di questa cartella su qualunque hosting di file statici
-(GitHub Pages, Cloudflare Pages, Netlify...). Non servono server né header speciali.
-Prova in locale: python3 -m http.server dentro la cartella, poi http://localhost:8000/
+Come funziona
+- index.html è il launcher: legge apps.json e, per ogni app, offre Scarica / Apri / Aggiorna / Rimuovi.
+- "Scarica" salva tutti i file dell'app nella Cache del browser (una cache per app e versione,
+  "app-<id>-<versione>"); sw.js li serve da lì, così l'app funziona senza connessione.
+- I file oltre 19 MB sono compressi, codificati in base64 e divisi in pezzi *.b64.N.txt;
+  craft-shim.js, in ogni app, intercetta fetch() e li ricompone.
+- PhotoCraft 0.23.1: copiata snippets/ anche in app/snippets/ (nella release manca e l'app non parte).
+- Ogni app ha un pulsante in basso a destra per tornare al launcher.
+
+Aggiornare a nuove versioni: rigenerare le cartelle delle app e apps.json con gli script di build;
+il launcher mostrerà "Aggiorna" sulle app scaricate.

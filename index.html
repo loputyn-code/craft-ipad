@@ -2,95 +2,354 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<title>Craft per iPad</title>
+<title>Craft Launcher</title>
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/hub.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Craft">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
   :root {
     --bg: #f4f4f6; --card: #ffffff; --ink: #1c1c1f; --muted: #6b6b73; --line: #e2e2e7;
-    --accent: #2f6fe0;
+    --accent: #2f6fe0; --ok: #2fa560; --warn: #c9822b; --err: #d9534f; --track: #e6e6eb;
   }
   @media (prefers-color-scheme: dark) {
-    :root { --bg: #151517; --card: #222226; --ink: #f2f2f4; --muted: #9a9aa3; --line: #34343a; --accent: #6f9dff; }
+    :root { --bg: #151517; --card: #222226; --ink: #f2f2f4; --muted: #9a9aa3; --line: #34343a;
+      --accent: #6f9dff; --track: #34343a; }
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; background: var(--bg); color: var(--ink);
     font: 16px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; }
-  main { max-width: 980px; margin: 0 auto; padding: 32px 24px 48px; }
-  header { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
-  header img { width: 56px; height: 56px; border-radius: 14px; }
-  h1 { margin: 0; font-size: 30px; letter-spacing: -0.02em; }
-  .lead { color: var(--muted); margin: 6px 0 28px; max-width: 60ch; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
-  a.app { display: flex; flex-direction: column; gap: 12px; padding: 20px; min-height: 190px;
-    background: var(--card); border: 1px solid var(--line); border-radius: 18px; color: inherit;
-    text-decoration: none; -webkit-tap-highlight-color: transparent;
-    transition: transform .12s ease, box-shadow .12s ease; }
-  a.app:active { transform: scale(.98); }
-  @media (hover: hover) { a.app:hover { box-shadow: 0 6px 24px rgba(0,0,0,.08); } }
-  .top { display: flex; align-items: center; gap: 14px; }
-  .top img { width: 64px; height: 64px; }
-  .name { font-size: 20px; font-weight: 650; }
-  .ver { color: var(--muted); font-size: 13px; }
-  .desc { color: var(--muted); flex: 1; }
-  .meta { display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
-  .open { background: var(--accent); color: #fff; padding: 8px 18px; border-radius: 999px; font-weight: 600; }
-  .size { color: var(--muted); }
-  section.notes { margin-top: 36px; padding: 20px 22px; background: var(--card); border: 1px solid var(--line);
-    border-radius: 18px; }
-  section.notes h2 { margin: 0 0 8px; font-size: 17px; }
-  section.notes ul { margin: 0; padding-left: 20px; color: var(--muted); }
-  section.notes li { margin: 6px 0; }
-  footer { margin-top: 28px; font-size: 13px; color: var(--muted); }
+  main { max-width: 1040px; margin: 0 auto;
+    padding: calc(28px + env(safe-area-inset-top)) calc(22px + env(safe-area-inset-right)) 48px calc(22px + env(safe-area-inset-left)); }
+  header { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  header img { width: 52px; height: 52px; border-radius: 13px; }
+  h1 { margin: 0; font-size: 28px; letter-spacing: -0.02em; }
+  .sub { color: var(--muted); font-size: 14px; }
+  .bar { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin: 20px 0 18px;
+    font-size: 14px; color: var(--muted); }
+  .pill { display: inline-flex; align-items: center; gap: 7px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--ok); }
+  .offline .dot { background: var(--warn); }
+  .tabs { display: inline-flex; background: var(--track); border-radius: 10px; padding: 3px; margin-left: auto; }
+  .tabs button { border: 0; background: none; color: var(--ink); font: inherit; font-size: 14px;
+    padding: 6px 14px; border-radius: 8px; cursor: pointer; }
+  .tabs button[aria-pressed="true"] { background: var(--card); box-shadow: 0 1px 3px rgba(0,0,0,.12); font-weight: 600; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+  .app { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 16px;
+    display: flex; flex-direction: column; gap: 12px; }
+  .top { display: flex; gap: 14px; align-items: center; }
+  .top img { width: 60px; height: 60px; flex: none; }
+  .name { font-size: 18px; font-weight: 650; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .badge { font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 6px;
+    background: var(--track); color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
+  .badge.ok { background: color-mix(in srgb, var(--ok) 18%, transparent); color: var(--ok); }
+  .badge.up { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
+  .desc { color: var(--muted); font-size: 14px; }
+  .note { font-size: 13px; color: var(--warn); }
+  .meta { font-size: 13px; color: var(--muted); }
+  .actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: auto; }
+  .btn { appearance: none; border: 0; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer;
+    padding: 9px 16px; border-radius: 999px; text-decoration: none; display: inline-flex; align-items: center;
+    -webkit-tap-highlight-color: transparent; min-height: 40px; }
+  .btn:active { transform: scale(.97); }
+  .primary { background: var(--accent); color: #fff; }
+  .secondary { background: var(--track); color: var(--ink); }
+  .ghost { background: none; color: var(--err); padding-left: 8px; padding-right: 8px; }
+  .btn[disabled], .btn.disabled { opacity: .45; pointer-events: none; }
+  .progress { flex: 1; min-width: 140px; }
+  .track { height: 8px; background: var(--track); border-radius: 4px; overflow: hidden; }
+  .fill { height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+  .ptext { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .error { font-size: 13px; color: var(--err); }
+  .empty { color: var(--muted); padding: 30px 0; text-align: center; }
+  section.notes { margin-top: 32px; padding: 18px 20px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; }
+  section.notes h2 { margin: 0 0 6px; font-size: 16px; }
+  section.notes ul { margin: 0; padding-left: 20px; color: var(--muted); font-size: 14px; }
+  section.notes li { margin: 5px 0; }
+  footer { margin-top: 22px; font-size: 13px; color: var(--muted); }
   footer a { color: var(--muted); }
+  dialog { border: 1px solid var(--line); border-radius: 16px; background: var(--card); color: var(--ink);
+    padding: 20px; max-width: 380px; }
+  dialog::backdrop { background: rgba(0,0,0,.35); }
+  dialog p { margin: 0 0 16px; }
+  dialog .actions { justify-content: flex-end; }
 </style>
 </head>
 <body>
 <main>
   <header>
     <img src="icons/hub.png" alt="">
-    <div><h1>Craft per iPad</h1></div>
+    <div>
+      <h1>Craft Launcher</h1>
+      <div class="sub">Le app Craft nel browser: scaricale per usarle anche senza connessione.</div>
+    </div>
   </header>
-  <p class="lead">Le versioni web ufficiali delle app Craft, pronte da usare nel browser. Tocca un'app per aprirla, poi il pulsante ⌂ in basso a destra per tornare qui.</p>
 
-  <div class="grid">
-    <a class="app" href="photocraft/index.html">
-      <div class="top"><img src="icons/photocraft.png" alt=""><div><div class="name">PhotoCraft</div><div class="ver">versione 0.23.1</div></div></div>
-      <div class="desc">Fotoritocco con livelli, maschere, testo e file PSD veri.</div>
-      <div class="meta"><span class="size">≈ 16 MB al primo avvio</span><span class="open">Apri</span></div>
-    </a>
-    <a class="app" href="pdfcraft/index.html">
-      <div class="top"><img src="icons/pdfcraft.png" alt=""><div><div class="name">PdfCraft</div><div class="ver">versione 0.21.1</div></div></div>
-      <div class="desc">Leggi, organizza e proteggi i PDF, con riconoscimento del testo.</div>
-      <div class="meta"><span class="size">≈ 22 MB al primo avvio</span><span class="open">Apri</span></div>
-    </a>
-    <a class="app" href="wordcraft/index.html">
-      <div class="top"><img src="icons/wordcraft.png" alt=""><div><div class="name">WordCraft</div><div class="ver">versione 0.18.1</div></div></div>
-      <div class="desc">Scrittura e impaginazione di documenti.</div>
-      <div class="meta"><span class="size">≈ 22 MB al primo avvio</span><span class="open">Apri</span></div>
-    </a>
-    <a class="app" href="filmcraft/index.html">
-      <div class="top"><img src="icons/filmcraft.png" alt=""><div><div class="name">FilmCraft</div><div class="ver">versione 0.20.1</div></div></div>
-      <div class="desc">Montaggio video, colore e audio.</div>
-      <div class="meta"><span class="size">≈ 15 MB al primo avvio</span><span class="open">Apri</span></div>
-    </a>
+  <div class="bar">
+    <span class="pill" id="net"><span class="dot"></span><span id="net-text">Online</span></span>
+    <span id="storage"></span>
+    <div class="tabs" role="group" aria-label="Filtro">
+      <button type="button" data-filter="all" aria-pressed="true">Tutte</button>
+      <button type="button" data-filter="installed" aria-pressed="false">Scaricate</button>
+    </div>
   </div>
+
+  <div class="grid" id="grid"><div class="empty">Carico il catalogo…</div></div>
 
   <section class="notes">
     <h2>Da sapere</h2>
     <ul>
-      <li>Le app sono pensate per mouse e tastiera: col touch funzionano, ma con una Magic Keyboard o un trackpad vanno molto meglio.</li>
-      <li>Il primo avvio scarica l'app e può richiedere qualche secondo, poi il browser la tiene in cache.</li>
-      <li>Puoi aprire i tuoi file dai menu delle app, ma questa pagina blocca i download: esportare o salvare un file sull'iPad potrebbe non funzionare. Prova prima di usarle per un lavoro importante.</li>
-      <li>Sono build sperimentali: se un'app si blocca, ricarica la pagina.</li>
+      <li><b>Scarica</b> salva l'app su questo iPad: da quel momento si apre anche senza connessione. <b>Apri</b> funziona sempre online, anche senza scaricare.</li>
+      <li>Per usare le app offline aggiungi questa pagina alla schermata Home (Condividi → Aggiungi alla schermata Home) e aprila da lì.</li>
+      <li>Quando esce una nuova versione compare <b>Aggiorna</b>. L'app scaricata resta quella vecchia finché non aggiorni.</li>
+      <li>I documenti restano nella memoria del browser di questo iPad e non si sincronizzano con altri dispositivi.</li>
+      <li>Le app sono pensate per mouse e tastiera: con una tastiera o un trackpad vanno molto meglio.</li>
     </ul>
   </section>
 
   <footer>
-    App di <a href="https://getartcraft.com">ArtCraft</a>, open source (MIT / Apache-2.0); licenze e note nella cartella di ciascuna app.
-    Catalogo dal progetto <a href="https://github.com/storytold/craft-launcher">craft-launcher</a>.
+    Build web ufficiali delle app <a href="https://getartcraft.com">ArtCraft</a> (open source, MIT / Apache-2.0),
+    dal catalogo di <a href="https://github.com/storytold/craft-launcher">craft-launcher</a>. Licenze e note nella cartella di ciascuna app.
   </footer>
 </main>
+
+<dialog id="confirm">
+  <p id="confirm-text"></p>
+  <div class="actions">
+    <button class="btn secondary" value="no" type="button" id="confirm-no">Annulla</button>
+    <button class="btn primary" value="yes" type="button" id="confirm-yes">Conferma</button>
+  </div>
+</dialog>
+
+<script>
+(() => {
+  const IT = {
+    photocraft: 'Fotoritocco', vectorcraft: 'Illustrazione vettoriale',
+    filmcraft: 'Montaggio video, colore e audio', lightcraft: 'Libreria foto e sviluppo raw',
+    pdfcraft: 'Lettura, organizzazione e protezione dei PDF', effectcraft: 'Motion graphics ed effetti visivi',
+    designcraft: 'Impaginazione ed editoria', figcraft: 'Design di interfacce e prototipi',
+    soundcraft: 'Registrazione, editing e mix audio', wordcraft: 'Scrittura e impaginazione di documenti',
+    deckcraft: 'Presentazioni', cadcraft: 'Disegno tecnico (CAD)', gridcraft: 'Fogli di calcolo e dati',
+    texturecraft: 'Pittura di texture 3D', materialcraft: 'Materiali procedurali',
+    'craft-anything': 'Scopri come funziona un software e crea il tuo', solidcraft: 'CAD 3D parametrico',
+  };
+  const PREFIX = 'app-';
+  const grid = document.getElementById('grid');
+  let apps = [];
+  let installed = {};          // id -> versione salvata e completa
+  const busy = {};             // id -> { done, total, abort }
+  const errors = {};
+  let filter = 'all';
+
+  const mb = (b) => (b / 1048576 >= 10 ? Math.round(b / 1048576) : (b / 1048576).toFixed(1)) + ' MB';
+  const cacheName = (a, v = a.version) => `${PREFIX}${a.id}-${v}`;
+  const marker = (a) => new URL(`${a.id}/.craft-installed`, location.href).href;
+  const hasCaches = 'caches' in window;
+
+  // stato rete
+  const netBox = document.getElementById('net');
+  const netText = document.getElementById('net-text');
+  const updNet = () => {
+    netBox.classList.toggle('offline', !navigator.onLine);
+    netText.textContent = navigator.onLine ? 'Online' : 'Offline: puoi aprire solo le app scaricate';
+    render();
+  };
+  addEventListener('online', updNet);
+  addEventListener('offline', updNet);
+
+  async function updStorage() {
+    const el = document.getElementById('storage');
+    try {
+      const n = Object.keys(installed).length;
+      const est = navigator.storage && navigator.storage.estimate ? await navigator.storage.estimate() : null;
+      el.textContent = `${n} ${n === 1 ? 'app scaricata' : 'app scaricate'}` +
+        (est && est.usage ? ` · ${mb(est.usage)} usati` : '');
+    } catch (_) { el.textContent = ''; }
+  }
+
+  async function scanInstalled() {
+    installed = {};
+    if (!hasCaches) return;
+    const keys = await caches.keys();
+    for (const a of apps) {
+      const mine = keys.filter((k) => k.startsWith(PREFIX + a.id + '-'))
+        .map((k) => k.slice((PREFIX + a.id + '-').length));
+      for (const v of mine) {
+        // completa solo se c'è il segnalino scritto alla fine del download
+        const c = await caches.open(cacheName(a, v));
+        if (await c.match(marker(a))) { installed[a.id] = v; break; }
+      }
+    }
+  }
+
+  function ask(text, yesLabel) {
+    const d = document.getElementById('confirm');
+    document.getElementById('confirm-text').textContent = text;
+    document.getElementById('confirm-yes').textContent = yesLabel;
+    return new Promise((resolve) => {
+      const done = (v) => { d.close(); resolve(v); };
+      document.getElementById('confirm-yes').onclick = () => done(true);
+      document.getElementById('confirm-no').onclick = () => done(false);
+      d.oncancel = () => resolve(false);
+      if (d.showModal) d.showModal(); else resolve(true);
+    });
+  }
+
+  async function download(a) {
+    if (busy[a.id]) return;
+    delete errors[a.id];
+    const ctrl = new AbortController();
+    const st = busy[a.id] = { done: 0, total: a.bytes, abort: () => ctrl.abort() };
+    render();
+    try { if (navigator.storage && navigator.storage.persist) await navigator.storage.persist(); } catch (_) {}
+    const name = cacheName(a);
+    try {
+      const cache = await caches.open(name);
+      const queue = a.files.slice();
+      const worker = async () => {
+        while (queue.length) {
+          const f = queue.shift();
+          const url = new URL(f, location.href).href;
+          const res = await fetch(url, { cache: 'reload', signal: ctrl.signal });
+          if (!res.ok) throw new Error(`${f}: errore ${res.status}`);
+          const blob = await res.blob();
+          await cache.put(url, new Response(blob, { headers: res.headers }));
+          st.done += blob.size;
+          paintProgress(a);
+        }
+      };
+      await Promise.all([worker(), worker(), worker(), worker()]);
+      await cache.put(marker(a), new Response(JSON.stringify({ version: a.version, at: Date.now() })));
+      // elimina le versioni precedenti
+      for (const k of await caches.keys()) {
+        if (k.startsWith(PREFIX + a.id + '-') && k !== name) await caches.delete(k);
+      }
+      installed[a.id] = a.version;
+    } catch (e) {
+      // non lasciare download a metà: se c'era una versione completa precedente resta quella
+      if (installed[a.id] !== a.version) await caches.delete(name);
+      if (e.name !== 'AbortError') {
+        errors[a.id] = navigator.onLine
+          ? 'Download non riuscito (' + (e.message || e) + '). Potrebbe mancare spazio: riprova.'
+          : 'Download interrotto: sei offline.';
+      }
+    } finally {
+      delete busy[a.id];
+      render();
+      updStorage();
+    }
+  }
+
+  async function remove(a) {
+    if (!(await ask(`Rimuovere ${a.name} da questo iPad? Potrai riscaricarla quando vuoi. ` +
+      `I documenti salvati dentro l'app potrebbero andare persi.`, 'Rimuovi'))) return;
+    for (const k of await caches.keys()) if (k.startsWith(PREFIX + a.id + '-')) await caches.delete(k);
+    delete installed[a.id];
+    render();
+    updStorage();
+  }
+
+  function paintProgress(a) {
+    const st = busy[a.id];
+    const card = document.querySelector(`[data-id="${a.id}"]`);
+    if (!st || !card) return;
+    const pct = Math.min(100, Math.round((st.done / st.total) * 100));
+    card.querySelector('.fill').style.width = pct + '%';
+    card.querySelector('.ptext').textContent = `${mb(st.done)} di ${mb(st.total)} · ${pct}%`;
+  }
+
+  function el(tag, attrs = {}, ...kids) {
+    const e = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (k === 'class') e.className = v;
+      else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+      else e.setAttribute(k, v);
+    }
+    for (const k of kids) if (k != null) e.append(k);
+    return e;
+  }
+
+  function card(a) {
+    const inst = installed[a.id];
+    const st = busy[a.id];
+    const outdated = inst && inst !== a.version;
+    const online = navigator.onLine;
+    const href = `${a.id}/index.html`;
+
+    const badges = [];
+    if (a.kind === 'community') badges.push(el('span', { class: 'badge' }, 'Community'));
+    if (inst && !outdated) badges.push(el('span', { class: 'badge ok' }, 'Offline'));
+    if (outdated) badges.push(el('span', { class: 'badge up' }, 'Aggiornamento'));
+
+    const actions = el('div', { class: 'actions' });
+    if (st) {
+      actions.append(
+        el('div', { class: 'progress' }, el('div', { class: 'track' }, el('div', { class: 'fill' })),
+          el('div', { class: 'ptext' }, 'Avvio download…')),
+        el('button', { class: 'btn secondary', type: 'button', onclick: () => st.abort() }, 'Annulla'));
+    } else if (inst) {
+      actions.append(el('a', { class: 'btn primary', href }, 'Apri'));
+      if (outdated) actions.append(el('button', { class: 'btn secondary' + (online ? '' : ' disabled'),
+        type: 'button', onclick: () => download(a) }, 'Aggiorna'));
+      actions.append(el('button', { class: 'btn ghost', type: 'button', onclick: () => remove(a) }, 'Rimuovi'));
+    } else {
+      actions.append(
+        el('button', { class: 'btn primary' + (online && hasCaches ? '' : ' disabled'), type: 'button',
+          onclick: () => download(a) }, `Scarica · ${mb(a.bytes)}`),
+        el('a', { class: 'btn secondary' + (online ? '' : ' disabled'), href }, 'Apri online'));
+    }
+
+    const verText = outdated ? `scaricata ${inst} · disponibile ${a.version}` : `versione ${a.version}`;
+    const c = el('article', { class: 'app', 'data-id': a.id },
+      el('div', { class: 'top' },
+        el('img', { src: `icons/${a.id}.png`, alt: '', loading: 'lazy' }),
+        el('div', {},
+          el('div', { class: 'name' }, a.name, ...badges),
+          el('div', { class: 'meta' }, verText))),
+      el('div', { class: 'desc' }, IT[a.id] || a.tagline),
+      a.note ? el('div', { class: 'note' }, a.note) : null,
+      errors[a.id] ? el('div', { class: 'error' }, errors[a.id]) : null,
+      actions);
+    return c;
+  }
+
+  function render() {
+    if (!apps.length) return;
+    const list = filter === 'installed' ? apps.filter((a) => installed[a.id] || busy[a.id]) : apps;
+    grid.replaceChildren(...(list.length ? list.map(card)
+      : [el('div', { class: 'empty' }, 'Nessuna app scaricata. Usa Scarica nella scheda Tutte.')]));
+    for (const a of list) paintProgress(a);
+  }
+
+  document.querySelectorAll('.tabs button').forEach((b) => b.addEventListener('click', () => {
+    filter = b.dataset.filter;
+    document.querySelectorAll('.tabs button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    render();
+  }));
+
+  // avviso se si chiude la pagina durante un download
+  addEventListener('beforeunload', (e) => { if (Object.keys(busy).length) { e.preventDefault(); e.returnValue = ''; } });
+
+  async function start() {
+    try {
+      const res = await fetch('apps.json', { cache: 'no-cache' });
+      apps = (await res.json()).apps;
+    } catch (e) {
+      grid.replaceChildren(el('div', { class: 'empty' }, 'Non riesco a caricare il catalogo. Riprova con la connessione attiva.'));
+      return;
+    }
+    try { await scanInstalled(); } catch (_) {}
+    updNet();
+    updStorage();
+  }
+
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+  start();
+})();
+</script>
 </body>
 </html>

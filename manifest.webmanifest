@@ -1,0 +1,12 @@
+{
+  "name": "Craft Launcher",
+  "short_name": "Craft",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#151517",
+  "theme_color": "#151517",
+  "icons": [
+    { "src": "icons/hub.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}
